@@ -67,6 +67,9 @@ buildPlugin()
     echo "" >> "$outdir"/index.yml
 }
 
-find ./plugins -mindepth 1 -name *.yml | while read file; do
+# Each immediate child of plugins is one plugin repository. Only YAML files at
+# that repository root are manifests; nested YAML files may be workflows or
+# other development configuration.
+find ./plugins -mindepth 2 -maxdepth 2 -type f -name '*.yml' | while read file; do
     buildPlugin "$file"
 done
