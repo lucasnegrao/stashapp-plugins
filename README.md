@@ -18,19 +18,23 @@ Each plugin lives in its own repository and is included here as a Git
 submodule. This keeps plugin repositories independently forkable while this
 repository provides a single install source.
 
-## Updating a plugin
+## Plugin updates
 
-After publishing changes in a plugin repository, update its pinned commit:
+The publishing workflow checks the tracked branch of every plugin hourly,
+commits new submodule pointers, and republishes the source automatically.
+
+To update immediately from a local catalog checkout, run:
 
 ```bash
-git submodule update --remote plugins/DupeFinder
-git add plugins/DupeFinder
-git commit -m "Update DupeFinder"
+./update_plugins.sh
+git add plugins
+git commit -m "Update plugins"
 git push
 ```
 
-Dependabot checks for new submodule commits and opens update pull requests
-automatically.
+The script updates every plugin to its configured branch and shows what
+changed. It does not commit or push unless called by the publishing workflow
+with `--commit`.
 
 ## Development checkout
 

@@ -1,3 +1,4 @@
 [submodule "plugins/DupeFinder"]
 	path = plugins/DupeFinder
 	url = https://github.com/lucasnegrao/stashapp-plugin-dupefinder-revamp.git
+	branch = main

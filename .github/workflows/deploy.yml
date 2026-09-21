@@ -1,19 +1,29 @@
 name: Deploy repository to Github Pages
 
 on:
+  schedule:
+    - cron: '17 * * * *'
   push:
-      paths:
+    paths:
       - 'plugins/**'
-      branches:
+      - '.gitmodules'
+      - 'build_site.sh'
+      - 'update_plugins.sh'
+      - '.github/workflows/deploy.yml'
+    branches:
       - main
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
+
+concurrency:
+  group: plugin-catalog
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -24,7 +34,10 @@ jobs:
       with:
         fetch-depth: '0'
         submodules: recursive
-    - run: |
+    - name: Update plugins from their tracked branches
+      run: ./update_plugins.sh --commit
+    - name: Build plugin source
+      run: |
         chmod +x build_site.sh
         ./build_site.sh _site/${{ github.ref_name }}
     - uses: actions/upload-pages-artifact@v5
