@@ -23,6 +23,7 @@ jobs:
       uses: actions/checkout@v6
       with:
         fetch-depth: '0'
+        submodules: recursive
     - run: |
         chmod +x build_site.sh
         ./build_site.sh _site/${{ github.ref_name }}

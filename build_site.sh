@@ -26,15 +26,18 @@ buildPlugin()
     echo "Processing $plugin_id"
 
     # create a directory for the version
-    version=$(git log -n 1 --pretty=format:%h -- "$dir"/*)
-    updated=$(TZ=UTC0 git log -n 1 --date="format-local:%F %T" --pretty=format:%ad -- "$dir"/*)
+    # Run Git from the plugin directory so this works for both regular
+    # directories and plugins included as Git submodules.
+    version=$(git -C "$dir" log -n 1 --pretty=format:%h -- .)
+    updated=$(TZ=UTC0 git -C "$dir" log -n 1 --date="format-local:%F %T" --pretty=format:%ad -- .)
     
     # create the zip file
     # copy other files
     zipfile=$(realpath "$outdir/$plugin_id.zip")
     
     pushd "$dir" > /dev/null
-    zip -r "$zipfile" . > /dev/null
+    zip -r "$zipfile" . \
+        -x ".git" ".git/*" ".github/*" "tests/*" > /dev/null
     popd > /dev/null
 
     name=$(grep "^name:" "$f" | head -n 1 | cut -d' ' -f2- | sed -e 's/\r//' -e 's/^"\(.*\)"$/\1/')
