@@ -34,9 +34,7 @@ if [[ "$commit_changes" == true ]]; then
     git commit -m "Update plugin submodules"
     git push origin HEAD:main
 else
-    echo
-    echo "Review the changes, then commit and push them:"
-    echo "  git add plugins"
-    echo "  git commit -m \"Update plugins\""
-    echo "  git push"
+    git add plugins
+    git commit -m \"Update plugins\"
+    git push
 fi
